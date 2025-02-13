@@ -3,11 +3,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import donors from '../../../../lib/data'
 // import LeftSlider from "./_comp/slider";
 
-export default function Home() {
+async function getData() {
+  const res = await fetch("http://localhost:4040/receipent", {
+    method: "POST",
+  });
+  return res.json();
+}
 
-  console.log(donors);
+export default async function Home() {
+
+  const receipents = await getData();
   
-
   return (
     <div className="">
       <header className="py-4 flex justify-between border-b border-mainborder ">
@@ -53,7 +59,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          {donors.map((data, index)=>{
+          {receipents.map((data, index)=>{
             return <RequestCard key={index} data={data}/>
           })}
         </div>
@@ -64,21 +70,23 @@ export default function Home() {
 
 
 const RequestCard = ({data}) => {
+  console.log(data);
+  
   return (
-
     <div className="mt-3 rounded-lg bg-white shadow-lg w-[100%]">
       <div className="flex">
         <div className="p-4 flex-none mt-2"><FontAwesomeIcon icon={faUserCircle} style={{ color: "red", width: 36, height: 36 }} /></div>
         <div className="flex-grow py-4">
           <div className="flex justify-between pr-4 font-bold">
-            <p className="text-gray-700">{data.name}</p>
+            <p className="text-gray-700">{data.contactname}</p>
             <p className="text-red-700">{data.status}</p>
           </div>
           <div className="flex justify-between pr-4 text-sm font-bold">
-            <p className="text-gray-700">{data.bloodGroup} ({data.donationType})</p>
-            <p className="text-gray-700">{data.units} Units </p>
+            <p className="text-gray-700">{data.bloodgroup} ({data.bloodtype})</p> 
+            <p className="text-gray-700">{data.unitcount} Units </p>
           </div>
-          <p className="text-gray-400 text-sm">{data.hospital}, {data.city}, {data.state}, India</p>
+          <p className="text-gray-400 text-sm">{data.hospitalname}, {data.landmark}</p>
+          <p className="text-gray-400 text-sm">{data.city},{data.district},  {data.state}</p>
           <p className="text-gray-800 text-sm">Tuesday, Dec 31</p>
 
           <div className="flex justify-between pr-4 text-sm font-bold mt-2">
